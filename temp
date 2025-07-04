@@ -1,0 +1,181 @@
+// const DraggableItem: FC<{ id: number, item: number }> = memo(({ id, item, }) => {
+//   const { attributes, listeners, setNodeRef, transform } = useDraggable({ id });
+
+//   const style = transform
+//     ? {
+//       transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+//     }
+//     : undefined;
+
+//   return (
+//     // <motion.div
+//     // className="relative"
+//     // layout
+//     // initial={{ opacity: 0, scale: 0 }}
+//     // animate={{ opacity: 1, scale: 1 }}
+//     // exit={{ opacity: 0, scale: 0 }}
+//     // transition={{ duration: 0.2, layout: { duration: 0.2 } }}
+//     // drag
+//     // dragConstraints={{ left: -100, right: 100, top: -100, bottom: 100 }}
+//     // dragTransition={{ bounceStiffness: 500, bounceDamping: 100 }}
+//     // whileDrag={{ scale: 1.2, boxShadow: '0px 0px 8px rgba(0,0,0,0.3)' }}
+//     // dragSnapToOrigin
+//     // >
+//     <div
+//       className="relative w-10 h-10 flex items-center justify-center bg-gray-200 cursor-pointer"
+//       ref={setNodeRef}
+//       style={style}
+//       {...listeners}
+//       {...attributes}
+//     >
+//       {item}
+//       <div
+//         className="absolute right-0 top-0 translate-x-1/3 -translate-y-1/3 w-2 h-2 bg-amber-300 cursor-pointer flex items-center justify-center"
+//       >-</div>
+//     </div>
+//   )
+// });
+
+// const DropContainer: FC<{ children: ReactNode, id: number }> = memo(({ children, id }) => {
+//   const { isOver, setNodeRef } = useDroppable({ id });
+
+//   return (
+//     <div
+//       ref={setNodeRef}
+//       className={`border border-gray-100 p-4
+//       ${isOver ? 'bg-gray-50' : 'bg-white'}
+//       transition-colors duration-200
+//       `}
+//     >
+//       {children}
+//     </div>
+//   )
+// });
+
+const Item: FC<{ id: UniqueIdentifier, name: string }> = ({ id, name }) => {
+  const {
+    attributes,
+    setNodeRef,
+    listeners,
+    transform,
+    isDragging,
+  } = useSortable({
+    id,
+    transition: null,
+  });
+
+  return (
+    <motion.div
+      ref={setNodeRef}
+      layoutId={String(id)}
+      className="
+      relative shadow-sm rounded-sm border border-gray-100 w-32 h-32 
+      flex items-center justify-center 
+      bg-white cursor-pointer"
+      animate={
+        transform
+          ? {
+            x: transform.x,
+            y: transform.y,
+            scale: isDragging ? 1.05 : 1,
+            zIndex: isDragging ? 1 : 0,
+            boxShadow: isDragging
+              ? '0 0 0 1px rgba(63, 63, 68, 0.05), 0px 15px 15px 0 rgba(34, 33, 81, 0.25)'
+              : undefined,
+          }
+          : {
+            x: 0,
+            y: 0,
+            scale: 1,
+          }
+      }
+      transition={{
+        duration: !isDragging ? 0.25 : 0,
+        scale: {
+          duration: 0.25,
+        },
+        zIndex: {
+          delay: isDragging ? 0 : 0.25,
+        },
+      }}
+      {...attributes}
+      {...listeners}
+    >
+      {name}
+    </motion.div>
+  );
+}
+
+const DroppableContainer: FC<{ idx: string, name: string, list: List }> = ({ idx, name, list }) => {
+  const { setNodeRef } = useSortable({ id: idx });
+
+  return (
+    <div className="border border-gray-200 p-4"><motion.div
+      ref={setNodeRef}
+      layout
+      transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+    ><div className="flex flex-col gap-2">
+        <h2 className="text-lg font-bold text-gray-800">{name}</h2>
+        <AnimatePresence>
+          <SortableContext items={list.getIdxList()} strategy={verticalListSortingStrategy}>
+            {list.getList().map((item) => (
+              <Item key={item.idx} id={item.idx} name={item.name} />
+            ))}
+          </SortableContext>
+        </AnimatePresence>
+      </div></motion.div></div>
+  );
+};
+
+const {
+  ml,
+  getCByCID
+} = useMultiList([
+  { idx: simpleId(), name: "List 1", list: new List(range(5).map(i => ({ idx: simpleId(), name: `Item ${i + 1}` }))) },
+  { idx: simpleId(), name: "List 2", list: new List(range([5, 10]).map(i => ({ idx: simpleId(), name: `Item ${i + 1}` }))) },
+  { idx: simpleId(), name: "List 3", list: new List(range([10, 15]).map(i => ({ idx: simpleId(), name: `Item ${i + 1}` }))) }
+]);
+
+const handleDragEnd = useCallback(({ active, over }: DragEndEvent) => { }, []);
+
+return (
+  <div className="p-4 flex flex-col gap-4">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+      whileHover={{ scale: 1.1, transition: { duration: 0.2 } }}
+      className="w-52 h-52 bg-red-500"
+    >
+      <h1>Hello</h1>
+    </motion.div>
+    <motion.div
+      style={{ width: 100, height: 100, background: 'blue' }}
+      initial={{ rotateY: 0 }}
+      whileHover={{ rotateY: 180 }}
+      transition={{ duration: 0.6 }}
+    >
+      Flip me!
+    </motion.div>
+    <DndContext
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <div className="flex">
+        <SortableContext
+          items={ml.map(i => i.idx)}
+          strategy={verticalListSortingStrategy}
+        >
+          {ml.map(i => (
+            <DroppableContainer
+              key={i.idx}
+              idx={i.idx}
+              list={i.list}
+              name={i.name}
+            />
+          ))}
+        </SortableContext>
+      </div>
+    </DndContext>
+  </div>
+);

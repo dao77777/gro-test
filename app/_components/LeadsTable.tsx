@@ -111,7 +111,7 @@ export const LeadsTalbe: FC = () => {
             ))}
           </div>
           {isLoading && <div className="w-full h-full flex items-center justify-center text-xl text-gray-200/90 font-boldr">Loading...</div>}
-          {(!isLoading && data!.length === 0) && <div className="w-full h-full flex items-center justify-center text-xl text-gray-200/90 font-bold">No Content</div>}
+          {(!isLoading && (!data || data!.length === 0)) && <div className="w-full h-full flex items-center justify-center text-xl text-gray-200/90 font-bold">No Content</div>}
         </div>
       </div></div>
     </div>

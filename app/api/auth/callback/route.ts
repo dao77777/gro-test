@@ -2,12 +2,12 @@ import { createClient } from '@/app/_lib/supabase/serverClient';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
-  console.log("request comming");
+  console.log("[api/auth/callback] request comming");
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
   const next = searchParams.get('next') ?? '/';
 
-  console.log(next);
+  console.log(code);
 
   if (code) {
     const supabase = await createClient();

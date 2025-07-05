@@ -116,13 +116,17 @@ export const useDraftMessage = () => {
   })
 };
 
-export const useLeadMessages = () => useQuery({
-  queryKey: ["leadsMessages"],
-  queryFn: async () => {
-    const supabase = getSupabase();
-    const { data, error } = await supabase
-      .from('leads')
-      .select(`
+export const useLeadMessages = () => {
+  const { data: user } = useUser();
+  const userId = user?.userId;
+
+  return useQuery({
+    queryKey: ["leadsMessages"],
+    queryFn: async () => {
+      const supabase = getSupabase();
+      const { data, error } = await supabase
+        .from('leads')
+        .select(`
           id,
           user_id,
           name,
@@ -133,11 +137,13 @@ export const useLeadMessages = () => useQuery({
           message,
           status
         `)
-      .order('created_at', { ascending: false });
-    if (error) throw error;
-    return data;
-  },
-});
+        .eq("user_id", userId)
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  })
+};
 
 export const useChangeLeadMessageStatus = () => {
   const queryClient = useQueryClient();

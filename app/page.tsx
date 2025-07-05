@@ -1,7 +1,9 @@
 import { FC } from "react"
 import { UserInfo } from "./_components/UserInfo";
 import { AddLeadForm } from "./_components/AddLeadForm";
-import { LeadsTalbe } from "./_components/LeadsTable";
+import { LeadsTalbe } from "./_components/LeadsManagement.tsx/LeadsTable";
+import { LeadsDrag } from "./_components/LeadsManagement.tsx/LeadsDrag";
+import { LeadsManagement } from "./_components/LeadsManagement.tsx";
 
 const Home: FC = () => {
   return (
@@ -10,9 +12,9 @@ const Home: FC = () => {
         <UserInfo />
         <AddLeadForm />
       </div></div>
-      <div className="w-[calc(100%-700px)] h-full flex flex-col items-center justify-start">
+      <div className="w-[calc(100%-700px)] h-full flex flex-col items-center justify-start overflow-auto">
         <div className="w-full h-4"></div>
-        <LeadsTalbe />
+        <LeadsManagement />
       </div>
     </div>
   )

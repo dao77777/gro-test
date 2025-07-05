@@ -116,7 +116,7 @@ export const useDraftMessage = () => {
   })
 };
 
-export const useLeadsMessages = () => useQuery({
+export const useLeadMessages = () => useQuery({
   queryKey: ["leadsMessages"],
   queryFn: async () => {
     const supabase = getSupabase();

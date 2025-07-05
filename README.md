@@ -1,30 +1,79 @@
-# Component
+# Setup
 
-PopOver, Overlay, VarySize
+## Clone
 
+克隆本项目到本地, `git clone https://github.com/dao77777/gro-test.git`
 
-# Markdown <-> HTML
+写一份`.env.local`, 你需要提供以下环境变量
+- `NEXT_PUBLIC_SUPABASE_URL`: 创建supabase项目时提供的 `url`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: 创建supabase项目时提供的 `anon_key`
+- `DEEPSEEK_API_KEY`: 此项目使用的是deepseek的api, 请从deepseek官方获取 `api key`
+```typescript
+NEXT_PUBLIC_SUPABASE_URL="xxx"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="xxx"
+DEEPSEEK_API_KEY="xxx"
+```
+
+## Github OAuth
+
+此项目的认证鉴权采用的是supabase自带的 `github oauth` 鉴权方式, 流程如下
+1. 浏览器端向supabase发起oauth认证请求, supabase重定向到github
+2. 在github这里获取oauth授权码, 并重定向到supabase提供的重定向url
+3. supabase会再次重定向到nextjs的 `/api/auth/callback` 端点获取 `access token` 和 `refresh token` 并注入 `cookie` 中
+4. 返回到 `/` 路径, 此时已在 `cookie` 中获取到了权限
+
+此认证鉴权流程需要我们需要做两处配置
+- github上申请 `oauth app`, 并以如下设置
+  - `Homepage URL` 设置为 `http://localhost:3000`
+  - `Authorization callback URL` 设置为supabase提供的重定向url, 下面会讲述如何获取
+- supabase
+  - 开启 `github oauth provider`, 并在此处拿到supabase提供的重定向url, 填入申请 `github oauth app` 时拿到的 `Client ID` 和 `Client Secret`
+  - 设置supabase的 `URL Configuration` 中的 `Redirect URLs` 为 `http://localhost:3000/api/auth/callback`
+
+## Start
+
+运行命令启动项目, `pnpm dev`
+
+# Tech Stack
+
+此项目的主要技术栈为
+- Frame: `nextjs`
+- DB: `supabase`
+- Query: `react query`
+- AI: `ai sdk`, `deepseek`, `remark`
+- Style: `shadcn/ui`, `tailwindcss`, `lucide`
+- Drag: `framer motion`, `dnd-kit`
+
+## Nextjs
+
+不必多说
+
+## React Query
+
+构建项目的异步请求功能, 用它的三个理由
+1. 其为请求的结果提供了缓存, 通过 `query key` 区分项目的所有请求, 避免不必要的网络开销
+2. 为异步请求的所有状态做了同步, 当你做出异步请求时, 关于这个请求的所有状态直接拿来即用
+3. 比较容易实现乐观更新
+
+## Remark
 
 Installation: `pnpm add unified remark-parse remark-html`
 
-# Ai SDK
+用于`html <-> mark`的相互转换, 此项目的作用是将 `markdown` 格式转换为 `html`
+
+## Ai SDK
 
 Installation: `pnpm add ai @ai-sdk/react @ai-sdk/openai-compatible @ai-sdk/provider @ai-sdk/provider-utils zod`
 
-# Supabase
+用于构建后端的ai层, 使能够调用大模型的能力
+
+## Supabase
 
 Installation: `npm install @supabase/supabase-js @supabase/ssr`
 
-
-## Table
-
-## Auth
+项目的数据库, 也内置了认证鉴权流程, 权限由 `RLS` 保障
 
 `signUp`, `signInWithPassword`, `verifyOtp`, `exchangeCodeForSession`
-
-**RLS**
-
-**Supabase Client**
 
 Client for browser environment
 ```typescript
@@ -80,66 +129,16 @@ export async function middleware(req: NextRequest) {
     }
   );
 
-  // 刷新会话
   await supabase.auth.getSession();
   return res;
 }
 
-// 配置中间件匹配的路由
 export const config = {
-  matcher: ['/dashboard/:path*', '/login', '/sign-up'], // 仅在需要 Supabase 的路由上运行
+  matcher: ['/dashboard/:path*', '/login', '/sign-up'],
 };
 ```
+## framer Motion & dnd-kit
 
-**Auth Action**
+Installation: `pnpm install framer-motion @dnd-kit/core`
 
-```typescript
-'use server';
-
-import { createClient } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
-
-export async function login(formData: FormData) {
-  const supabase = await createClient();
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
-  };
-
-  const { error } = await supabase.auth.signInWithPassword(data);
-
-  if (error) {
-    console.error(error);
-    return redirect('/error');
-  }
-
-  return redirect('/dashboard');
-}
-
-export async function signup(formData: FormData) {
-  const supabase = await createClient();
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
-  };
-
-  const { error } = await supabase.auth.signUp(data);
-
-  if (error) {
-    console.error(error);
-    return redirect('/error');
-  }
-
-  return redirect('/dashboard');
-}
-```
-
-## framer-motion
-
-Installation: `npm install framer-motion`
-
-## dnd-kit
-
-`collision detect`
-
-`sensor`: pointer, mouse, touch, keyboard
+拖拽的实现, 挺丝滑的

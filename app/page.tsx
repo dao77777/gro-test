@@ -1,9 +1,8 @@
 import { FC } from "react"
 import { UserInfo } from "./_components/UserInfo";
 import { AddLeadForm } from "./_components/AddLeadForm";
-import { LeadsTalbe } from "./_components/LeadsManagement.tsx/LeadsTable";
-import { LeadsDrag } from "./_components/LeadsManagement.tsx/LeadsDrag";
 import { LeadsManagement } from "./_components/LeadsManagement.tsx";
+import Image from "next/image";
 
 const Home: FC = () => {
   return (

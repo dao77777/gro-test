@@ -3,7 +3,7 @@
 import { FC, useMemo, useState } from "react";
 import { LeadsManagementShell } from "./LeadsManagementShell";
 import { LeadsTalbe } from "./LeadsTable";
-import { useChangeLeadMessageStatus, useDeleteLeadMessage, useLeadMessages } from "@/app/_api";
+import { useChangeLeadMessageContent, useChangeLeadMessageStatus, useDeleteLeadMessage, useLeadMessages } from "@/app/_api";
 import { arr2CSV } from "@/app/_utils";
 import { LeadsDrag } from "./LeadsDrag";
 import { AnimatePresence, motion } from "framer-motion";
@@ -42,6 +42,10 @@ export const LeadsManagement: FC = () => {
     mutateAsync: deleteLeadMessage,
   } = useDeleteLeadMessage();
 
+  const {
+    mutateAsync: changeLeadMessageContent
+  } = useChangeLeadMessageContent();
+
   const [style, setStyle] = useState<"table" | "drag">("table");
 
   return (
@@ -73,6 +77,7 @@ export const LeadsManagement: FC = () => {
               <LeadsTalbe
                 data={data}
                 onChangeLeadMessageStatus={changeLeadMesssageStatus}
+                onChangeLeadMessageContent={changeLeadMessageContent}
                 onDeleteLeadMessage={deleteLeadMessage}
               />
             </motion.div>

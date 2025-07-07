@@ -137,8 +137,21 @@ export const config = {
   matcher: ['/dashboard/:path*', '/login', '/sign-up'],
 };
 ```
-## framer Motion & dnd-kit
+## Framer Motion & dnd-kit
 
 Installation: `pnpm install framer-motion @dnd-kit/core`
 
 拖拽的实现, 挺丝滑的
+
+# Temp
+
+## Table 
+
+虚拟渲染: `react-virtualized`
+
+## Markdown
+
+- 渲染: `react-markdown`, `markd`, `unified`, `rehype`, `remark`
+- 安全: `dompurify`
+- 预制样式: `github-markdown-css`, `@tailwindcss/typography`
+- 代码语法高亮: `highlight.js`, `prism.js`

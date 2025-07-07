@@ -180,6 +180,41 @@ export const useChangeLeadMessageStatus = () => {
   })
 };
 
+export const useChangeLeadMessageContent = () => {
+  const queryClient = useQueryClient();
+  const { data: user } = useUser();
+  const userId = user?.userId;
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      message
+    }: {
+      id: string,
+      message: string
+    }) => {
+      queryClient.setQueryData(["leadsMessages"], (oldData: any) => {
+        return oldData.map((item: any) => {
+          if (item.id === id) {
+            return { ...item, message };
+          }
+          return item;
+        });
+      });
+
+      const { error } = await supabase
+        .from("leads")
+        .update({ message })
+        .eq("id", id)
+        .eq("user_id", userId);
+
+      if (error) throw error;
+
+      queryClient.refetchQueries({ queryKey: ["leadsMessages"] });
+    }
+  })
+};
+
 export const useDeleteLeadMessage = () => {
   const queryClient = useQueryClient();
   const { data: user } = useUser();

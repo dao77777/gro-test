@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { FC, useState } from "react";
 import { getSupabase } from "../../_lib/supabase/browserClient";
-import { MessageContainer } from "../MessageContainer";
+import { MarkdownEditor } from "../MarkdownEditor";
 import { ChevronsUpDown, Download, Trash } from "lucide-react"
 import {
   Collapsible,
@@ -36,11 +36,13 @@ export const LeadsTalbe: FC<{
     status: any;
   }[] | undefined,
   onChangeLeadMessageStatus: Function,
-  onDeleteLeadMessage: Function
+  onChangeLeadMessageContent: Function,
+  onDeleteLeadMessage: Function,
 }> = ({
   data,
   onChangeLeadMessageStatus,
-  onDeleteLeadMessage
+  onChangeLeadMessageContent,
+  onDeleteLeadMessage,
 }) => {
     return (
       <div>
@@ -69,6 +71,9 @@ export const LeadsTalbe: FC<{
                 createdAt={new Date(item.created_at)}
                 onStatusChange={(status) => onChangeLeadMessageStatus({ id: item.id, status })}
                 onDelete={() => onDeleteLeadMessage(item.id)}
+                onMessageChange={(message) => {
+                  onChangeLeadMessageContent({ id: item.id, message })
+                }}
               ></Item>
             ))}
           </div>
@@ -85,8 +90,9 @@ const Item: FC<{
   message: string,
   status: string,
   createdAt: Date,
-  onStatusChange: (status: string) => void,
-  onDelete: () => void
+  onStatusChange?: (status: string) => void,
+  onMessageChange?: (message: string) => void,
+  onDelete?: () => void,
 }> = ({
   name,
   role,
@@ -95,8 +101,9 @@ const Item: FC<{
   message,
   status,
   createdAt,
-  onStatusChange,
-  onDelete
+  onStatusChange = () => { },
+  onMessageChange = () => { },
+  onDelete = () => { },
 }) => {
     const [isOpen, setIsOpen] = useState(false)
 
@@ -148,7 +155,10 @@ const Item: FC<{
           </div>
         </div>
         <CollapsibleContent>
-          <MessageContainer generateMessage={message} />
+          <MarkdownEditor
+            markdown={message}
+            onSubmit={onMessageChange}
+          />
         </CollapsibleContent>
       </Collapsible>
     )

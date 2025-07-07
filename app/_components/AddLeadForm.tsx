@@ -6,7 +6,7 @@ import { useCompletion } from "@ai-sdk/react";
 import { Save, Sparkles } from "lucide-react";
 import { InputItem } from './InputItem';
 import { Button } from './Button';
-import { MessageContainer } from './MessageContainer';
+import { MarkdownEditor } from './MarkdownEditor';
 
 const useLeadMessage = () => {
   const [name, setName] = useState("");
@@ -69,8 +69,6 @@ export const AddLeadForm: FC = () => {
   }, [generateMessageByAI]);
 
   const handleDraftMessage = useCallback(async () => {
-
-
     try {
       await draftMessage({
         name,
@@ -85,6 +83,10 @@ export const AddLeadForm: FC = () => {
       return;
     }
   }, [draftMessage, name, role, company, linkedinUrl, message]);
+
+  const handleSubmit = (message: string) => {
+    setMessage(message);
+  }
 
   return (
     <div className="
@@ -137,7 +139,12 @@ export const AddLeadForm: FC = () => {
           Generate Message
         </div></Button>
       {
-        isGenerateError ? <div className='text-red-800'>Some error happened when generate message, please try again later.</div> : <MessageContainer generateMessage={message} />
+        isGenerateError
+          ? <div className='text-red-800'>Some error happened when generate message, please try again later.</div>
+          : <MarkdownEditor
+            markdown={message}
+            onSubmit={handleSubmit}
+          />
       }
       {isDraftMessageReady ? (
         <Button

@@ -221,23 +221,31 @@ export const AddLeadForm: FC = () => {
           </h1>
           <p className="text-sm text-gray-600">Enter lead information and generate a personalized outreach message</p>
         </div>
-        {
-          isGenerateReady
-            ? (
-              <div className='flex gap-2'>
-                <RotateCcw
-                  className='text-gray-800 hover:text-gray-600 cursor-pointer'
-                  onClick={handleResetBatchLeadMessages}
-                />
+        <div className='flex gap-2'>
+          {
+            isGenerateReady
+              ? (
                 <Plus
                   className="text-green-600 hover:text-green-500 cursor-pointer transition-all"
                   onClick={handleAddButtonClick}
                 />
-              </div>
 
-            )
-            : null
-        }
+              )
+              : null
+          }
+          {
+            (message !== "" || batchLeadMessages.length !== 0)
+              ? (
+                <RotateCcw
+                  className='text-gray-800 hover:text-gray-600 cursor-pointer'
+                  onClick={handleResetBatchLeadMessages}
+                />
+              )
+              : null
+          }
+        </div>
+
+
       </div>
       <div className='flex justify-between gap-4'>
         <div className='grow'><InputItem

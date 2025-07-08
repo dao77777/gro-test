@@ -6,10 +6,14 @@ export const MarkdownEditor: FC<{
   markdown: string,
   onSubmit?: (markdown: string) => void
   className?: string
+  classNameForMarkdown?: string
+  classNameForEditor?: string
 }> = memo(({
   markdown,
   onSubmit = () => { },
-  className = ""
+  className = "",
+  classNameForMarkdown = "",
+  classNameForEditor = ""
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
 
@@ -28,18 +32,19 @@ export const MarkdownEditor: FC<{
     markdown === ""
       ? null
       : (
-        <div className="relative">
+        <div className={`relative ${className}`}>
           {
             isEditMode
               ? (
                 <SubmitTextArea
+                  className={`rounded-xs border border-gray-200 p-2 ${classNameForEditor}`}
                   initialValue={markdown}
                   onSubmit={handleSubmit}
                 />
               )
               : (
                 <div
-                  className="rounded-xs p-2 bg-gray-50 prose max-w-none"
+                  className={`rounded-xs p-2 bg-gray-50 prose max-w-none ${classNameForMarkdown}`}
                 ><ReactMarkdown>
                     {markdown}
                   </ReactMarkdown></div>

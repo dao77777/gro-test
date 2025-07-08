@@ -54,10 +54,10 @@ export const SubmitTextArea: FC<{
   }), []);
 
   return (
-    <div className={`flex flex-col items-end gap-2 ${className}`}>
+    <div className={`flex flex-col items-end gap-2`}>
       <TextArea
+        className={className}
         ref={textAreaRef}
-        className="rounded-xs border border-gray-200 p-2"
         initialValue={initialValue}
         onChanged={handleChanged}
         onChange={handleOnChange}

@@ -134,6 +134,7 @@ export const AddLeadForm: FC = () => {
   const isSingleGenerate = useMemo(() => batchLeadMessages.length === 0, [batchLeadMessages]);
 
   const handleResetBatchLeadMessages = useCallback(() => {
+    setMessage("");
     setBatchLeadMessages([]);
     batchLeadMessagesRef.current = [];
   }, []);

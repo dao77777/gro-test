@@ -3,7 +3,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { FC, useState } from "react";
 import { getSupabase } from "../../_lib/supabase/browserClient";
-import { MarkdownEditor } from "../MarkdownEditor";
 import { ChevronsUpDown, Download, Trash } from "lucide-react"
 import {
   Collapsible,
@@ -22,6 +21,7 @@ import {
 } from "@/components/ui/select"
 import { useChangeLeadMessageStatus, useDeleteLeadMessage, useLeadMessages } from "../../_api";
 import { arr2CSV, exportCSV, getHMSFromDate, getYMDFomDate } from "../../_utils";
+import { MarkdownEditor } from "../Input/MarkdownEditor/MarkdownEditor";
 
 export const LeadsTalbe: FC<{
   data: {
@@ -157,7 +157,7 @@ const Item: FC<{
         <CollapsibleContent>
           <MarkdownEditor
             markdown={message}
-            onSubmit={onMessageChange}
+            onMarkdownChange={onMessageChange}
           />
         </CollapsibleContent>
       </Collapsible>

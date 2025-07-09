@@ -1,8 +1,12 @@
-import { type NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 import { updateSession } from './app/_lib/supabase/middleware'
 
 export async function middleware(request: NextRequest) {
-  return await updateSession(request);
+  if (process.env.NODE_ENV !== 'development') {
+    return await updateSession(request);
+  }
+  // In development mode, we can skip the session update
+  return NextResponse.next();
 }
 
 export const config = {

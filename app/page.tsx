@@ -1,6 +1,6 @@
 import { FC } from "react"
 import { UserInfo } from "./_components/UserInfo";
-import { AddLeadForm } from "./_components/AddLeadForm/AddLeadForm";
+import { AddLeadForm } from "./_components/AddLeadForm";
 import { LeadsManagement } from "./_components/LeadsManagement.tsx";
 
 const Home: FC = () => {

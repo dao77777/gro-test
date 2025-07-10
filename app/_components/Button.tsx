@@ -3,31 +3,36 @@ import { Loading } from "./Loading";
 
 export const Button: FC<{
   children: ReactNode,
-  className?: string,
   onClick?: () => void,
   loading?: boolean,
-  disabled?: boolean
+  disabled?: boolean,
+  className?: string,
+  classNameForDisabled?: string,
+  classNameForContent?: string,
 }> = memo(({
   children,
-  className = "",
   onClick = () => { },
   disabled = false,
-  loading = false
+  loading = false,
+  className = "",
+  classNameForDisabled = "",
+  classNameForContent
 }) => {
   return (
     <button
       onClick={disabled ? () => { } : onClick}
       className={`
-        shadow-sm hover:shadow-lg
+        shadow-sm ${disabled ? "" : "hover:shadow-lg"}
         rounded-xs p-2
-        ${disabled ? "bg-gray-400" : "bg-gray-800 hover:bg-gray-700"} text-white font-bold ${disabled ? "" : "active:scale-95"}
+        ${disabled ? "bg-gray-400" : "bg-gray-800 hover:bg-gray-700"} text-white font-bold ${disabled ? "" : `active:scale-95`}
         ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
+        ${disabled ? classNameForDisabled : ""}
         transition-all
         ${className}
         `}
       disabled={disabled}
     ><div className='w-full flex items-center justify-center gap-2'>
-        {children}
+        <div className={classNameForContent}>{children}</div>
         {loading ? <Loading /> : null}
       </div></button>
   )

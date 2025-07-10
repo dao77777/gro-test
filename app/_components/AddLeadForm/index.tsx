@@ -42,6 +42,24 @@ const Index: FC = memo(() => {
 	const singleModeGeneratorRef = useRef<SingleModeGeneratorRef>(null);
 	const [singleModeLeadMessage, setSingleModeLeadMessage] = useState<LeadMessage | null>(null);
 
+	const genMsgForSingleMode = useCallback(() => {
+		setSingleModeLeadMessage({
+			id: uuid.v4(),
+			name,
+			role,
+			company,
+			linkedinUrl,
+			message: "",
+			isGenerating: false,
+			isGenerateError: undefined,
+			isDraftMessageReady: false
+		});
+
+		setTimeout(() => {
+			singleModeGeneratorRef.current?.generateMessageByAI();
+		}, 1);
+	}, [name, role, company, linkedinUrl]);
+
 	const multiModeGeneratorRef = useRef<MultiModeGeneratorRef>(null);
 	const [multiModeLeadMessages, setMultiModeLeadMessages] = useState<LeadMessage[]>([]);
 	const isMultiModeLeadMessagesGenerating = useMemo(() => multiModeLeadMessages.some(i => i.isGenerating), [multiModeLeadMessages]);
@@ -140,7 +158,7 @@ const Index: FC = memo(() => {
 
 	const handleGen = useCallback(() => {
 		if (mode === "single") {
-			singleModeGeneratorRef.current?.generateMessageByAI();
+			genMsgForSingleMode();
 		}
 
 		if (mode === "multi") {
@@ -148,23 +166,9 @@ const Index: FC = memo(() => {
 		}
 
 		if (mode === undefined) {
-			setSingleModeLeadMessage({
-				id: uuid.v4(),
-				name,
-				role,
-				company,
-				linkedinUrl,
-				message: "",
-				isGenerating: false,
-				isGenerateError: undefined,
-				isDraftMessageReady: false
-			});
-
-			setTimeout(() => {
-				singleModeGeneratorRef.current?.generateMessageByAI();
-			}, 1);
+			genMsgForSingleMode()
 		}
-	}, [mode, name, role, company, linkedinUrl]);
+	}, [mode, genMsgForSingleMode]);
 
 	const handleSave = useCallback(() => {
 		if (mode === "single") {

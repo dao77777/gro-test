@@ -1,7 +1,7 @@
 "use client"
 
 import { FC, useMemo, useState } from "react";
-import { LeadsManagementShell } from "./LeadsManagementShell";
+import { Shell } from "./Shell";
 import { LeadsTalbe } from "./LeadsTable";
 import { useChangeLeadMessageContent, useChangeLeadMessageStatus, useDeleteLeadMessage, useLeadMessages } from "@/app/_api";
 import { arr2CSV } from "@/app/_utils";
@@ -49,7 +49,7 @@ export const LeadsManagement: FC = () => {
   const [style, setStyle] = useState<"table" | "drag">("table");
 
   return (
-    <LeadsManagementShell
+    <Shell
       csv={csv}
       isFetching={isFetching}
       onStyleChange={() => setStyle(style === "table" ? "drag" : "table")}
@@ -97,6 +97,6 @@ export const LeadsManagement: FC = () => {
             </motion.div>
           ))}
       </AnimatePresence>
-    </LeadsManagementShell>
+    </Shell>
   )
 }

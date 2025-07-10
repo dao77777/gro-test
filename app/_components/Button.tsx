@@ -24,7 +24,7 @@ export const Button: FC<{
       className={`
         shadow-sm ${disabled ? "" : "hover:shadow-lg"}
         rounded-xs p-2
-        ${disabled ? "bg-gray-400" : "bg-gray-800 hover:bg-gray-700"} text-white font-bold ${disabled ? "" : `active:scale-95`}
+        ${disabled ? "bg-gray-400" : "bg-gray-800 hover:bg-gray-700"} text-white font-medium ${disabled ? "" : `active:scale-95`}
         ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
         ${disabled ? classNameForDisabled : ""}
         transition-all
@@ -35,5 +35,5 @@ export const Button: FC<{
         <div className={classNameForContent}>{children}</div>
         {loading ? <Loading /> : null}
       </div></button>
-  )
+  );
 });

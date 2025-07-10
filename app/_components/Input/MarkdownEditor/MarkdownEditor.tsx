@@ -36,7 +36,7 @@ export const MarkdownEditor: FC<{
             className={`
             relative
             ${className}`}
-        ><AnimatePresence mode="wait">
+        ><AnimatePresence mode="popLayout">
                 {
                     isEditMode
                         ? (
@@ -50,7 +50,6 @@ export const MarkdownEditor: FC<{
                                     `}
                                 />
                             </motion.div>
-
                         )
                         : (
                             <motion.div
@@ -63,17 +62,17 @@ export const MarkdownEditor: FC<{
                                 key="markdown-mode"
                                 {...animation}
                             >
-                                <AnimatePresence mode="wait">
+                                <AnimatePresence mode="popLayout">
                                     {isWaiting && <Label key="waiting">Waiting Content ...</Label>}
                                     {isGenerating && <Label key="generatin">Generating ...</Label>}
                                     {!isEmpty && !isWaiting && !isGenerating && <Label key="message">Message</Label>}
                                 </AnimatePresence>
-                                <AnimatePresence mode="wait">
+                                <AnimatePresence mode="popLayout">
                                     {
                                         isEmpty
                                             ? (
                                                 <motion.p
-                                                    className="self-center text-gray-200 text-xl py-4"
+                                                    className="self-center text-gray-200 text-xl font-medium py-4"
                                                     key="empty"
                                                     {...animation}
                                                 >No Content</motion.p>

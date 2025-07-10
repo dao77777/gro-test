@@ -2,15 +2,28 @@ import { FC, memo, Ref } from "react";
 import { MarkdownEditor } from "../../Input/MarkdownEditor/MarkdownEditor";
 import { GenerateMessageByAIRef, useGenerateMessageByAI } from "../_hooks/useGenerateMessageByAI";
 import { LeadMessage } from "../_types/LeadMessage";
+import { Button } from "../../Button";
 
 export const Item: FC<{
     ref?: Ref<GenerateMessageByAIRef>,
-    value: LeadMessage,
-    onValueChange: (value: LeadMessage) => void,
+    value?: LeadMessage,
+    onValueChange?: (value: LeadMessage) => void,
+    onDelete?: () => void
 }> = memo(({
     ref,
-    value,
-    onValueChange
+    value = {
+        id: "",
+        name: "",
+        role: "",
+        company: "",
+        linkedinUrl: "",
+        message: "",
+        isGenerating: false,
+        isGenerateError: undefined,
+        isDraftMessageReady: false
+    },
+    onValueChange = () => { },
+    onDelete = () => { }
 }) => {
     const {
         isWaiting,
@@ -20,30 +33,37 @@ export const Item: FC<{
         ref,
         value,
         onValueChange
-    })
+    });
 
     return (
-        <div className="flex items-start gap-2 p-2 bg-gray-200 rounded-xs">
-            <DisplayCard
-                className="w-1/3!"
-                name={value.name}
-                role={value.role}
-                company={value.company}
-            />
-            {
-                value.isGenerateError
-                    ? <div className='text-red-800'>Some error happened when generate message, please try again later.</div>
-                    : (
-                        <MarkdownEditor
-                            className="w-2/3!"
-                            classNameForEditor="bg-white!"
-                            isWaiting={isWaiting}
-                            isGenerating={isGenerating}
-                            markdown={value.message}
-                            onMarkdownChange={handleOnMessageChange}
-                        />
-                    )
-            }
+        <div className="rounded-xs p-2 flex flex-col gap-2 bg-gray-200">
+            <Button
+                className="shadow-none! bg-gray-400! hover:bg-gray-500! active:scale-100! text-sm p-1!"
+                onClick={onDelete}
+            >Delete</Button>
+            <div className="w-full flex items-start gap-2">
+                <DisplayCard
+                    className="w-3/10!"
+                    name={value.name}
+                    role={value.role}
+                    company={value.company}
+                />
+                {
+                    value.isGenerateError
+                        ? <div className='text-red-800'>Some error happened when generate message, please try again later.</div>
+                        : (
+                            <MarkdownEditor
+                                className="w-7/10!"
+                                classNameForEditor="bg-white!"
+                                isWaiting={isWaiting}
+                                isGenerating={isGenerating}
+                                markdown={value.message}
+                                onMarkdownChange={handleOnMessageChange}
+                            />
+                        )
+                }
+            </div>
+
         </div>
     );
 });

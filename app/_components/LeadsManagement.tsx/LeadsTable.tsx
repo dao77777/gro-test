@@ -46,7 +46,7 @@ export const LeadsTalbe: FC<{
 }) => {
     return (
       <div>
-        <div className="w-full flex justify-between gap-2 text-gray-400/90 font-bold py-2 border-b-[1px] border-gray-400/90">
+        <div className="w-full flex justify-between gap-2 text-gray-400/90 font-medium py-2 border-b-[1px] border-gray-400/90">
           <div className="w-32">Name</div>
           <div className="w-32">Role</div>
           <div className="w-32">Company</div>
